@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Free Bikers Roma - Gita a Sermoneta</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #f59e0b; /* Amber 500 */
+            --dark: #0a0a0a;
+            --card-bg: rgba(31, 41, 55, 0.7);
+        }
+
+        body {
+            background-color: var(--dark);
+            color: #e5e7eb;
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #0a0a0a; }
+        ::-webkit-scrollbar-thumb { background: #f59e0b; border-radius: 10px; }
+
+        .hero-section {
+            position: relative;
+            min-height: 100vh;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            background-color: #000;
+        }
+
+        .hero-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.9)), 
+                              url('https://images.unsplash.com/photo-1558981806-ec527fa84c39?q=80&w=2070&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+            z-index: 1;
+            animation: slowZoom 20s infinite alternate;
+        }
+
+        @keyframes slowZoom {
+            from { transform: scale(1); }
+            to { transform: scale(1.1); }
+        }
+
+        .timeline-container {
+            position: relative;
+        }
+        .timeline-line {
+            position: absolute;
+            left: 20px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(to bottom, var(--primary), transparent);
+        }
+        @media (min-width: 768px) {
+            .timeline-line { left: 50%; transform: translateX(-50%); }
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 3rem;
+        }
+
+        .timeline-dot {
+            position: absolute;
+            left: 11px;
+            top: 10px;
+            width: 20px;
+            height: 20px;
+            background: var(--primary);
+            border-radius: 50%;
+            z-index: 10;
+            box-shadow: 0 0 15px var(--primary);
+        }
+        @media (min-width: 768px) {
+            .timeline-dot { left: 50%; transform: translateX(-50%); }
+        }
+
+        .moto-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-left: 4px solid var(--primary);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .moto-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary);
+            box-shadow: 0 10px 30px -10px rgba(245, 158, 11, 0.3);
+        }
+
+        .marquee-container {
+            width: 100%;
+            overflow: hidden;
+            padding: 1.5rem 0;
+            mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+        }
+
+        .marquee-content {
+            display: flex;
+            width: max-content;
+            animation: marquee 30s linear infinite;
+        }
+
+        @keyframes marquee {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        .gallery-item {
+            width: 280px;
+            height: 180px;
+            margin-right: 1rem;
+            border-radius: 0.75rem;
+            overflow: hidden;
+            flex-shrink: 0;
+            border: 2px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: all 0.4s ease-out;
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        .accordion-item.active .accordion-content {
+            max-height: 800px;
+            padding: 1.5rem;
+        }
+
+        .accordion-item.active .chevron-icon {
+            transform: rotate(180deg);
+        }
+
+        .custom-shape-divider-bottom {
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            width: 100%;
+            line-height: 0;
+            z-index: 5;
+        }
+
+        .custom-shape-divider-bottom svg {
+            display: block;
+            width: 100%;
+            height: 60px;
+            fill: var(--dark);
+        }
+
+        .map-btn {
+            display: inline-flex;
+            align-items: center;
+            background: rgba(245, 158, 11, 0.1);
+            color: var(--primary);
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            margin-top: 10px;
+            border: 1px solid var(--primary);
+            transition: all 0.2s;
+        }
+        .map-btn:hover {
+            background: var(--primary);
+            color: black;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header class="fixed w-full z-50 bg-black/80 backdrop-blur-md border-b border-white/5">
+        <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-3 group cursor-pointer">
+                <img src="logo.png" alt="Logo" class="h-10 w-auto" onerror="this.src='https://placehold.co/100x100/f59e0b/black?text=FB'">
+                <span class="text-xl font-black uppercase italic text-white group-hover:text-amber-500 transition-colors">
+                    Free Bikers <span class="text-amber-500">Roma</span>
+                </span>
+            </div>
+            <nav class="hidden md:flex space-x-8 text-xs font-bold uppercase tracking-widest text-white/70">
+                <a href="#programma" class="hover:text-amber-500">Programma</a>
+                <a href="#storia" class="hover:text-amber-500">Storia</a>
+                <a href="#percorso" class="hover:text-amber-500">Mappa</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero -->
+    <section class="hero-section">
+        <div class="hero-bg"></div>
+        <div class="relative z-10 container mx-auto px-4 text-center">
+            <div data-aos="fade-down">
+                <h2 class="text-amber-500 font-bold tracking-[0.3em] uppercase mb-4">Domenica 25 Gennaio 2026</h2>
+                <h1 class="text-6xl md:text-9xl font-black mb-8 text-white italic uppercase tracking-tighter leading-none">
+                    Sermoneta<br><span class="text-amber-500">On The Road</span>
+                </h1>
+            </div>
+            <p class="text-lg md:text-2xl text-gray-300 mb-10 max-w-2xl mx-auto font-light" data-aos="fade-up">
+                Tra le mura del Castello Caetani e i sapori della Sagra della Polenta.
+            </p>
+            <div class="flex flex-col sm:flex-row justify-center gap-4" data-aos="fade-up">
+                <a href="https://www.google.com/maps/dir/Area+Servizio+Casilina+interna,+00169+Roma+RM/41.7977155,12.5865768/V.+dei+Laghi,+14,+00047+Marino+RM/Cori,+04010+LT/Norma,+04010+LT/Sermoneta,+04013+LT/@41.6681266,12.8689242,14z/data=!4m33!4m32!1m5!1m1!1s0x132f62c7632ddf41:0x3c47b62f36a66bd3!2m2!1d12.6072486!2d41.8761306!1m0!1m5!1m1!1s0x132585d3d8a3abb3:0x2a6f5cb9cd2d1096!2m2!1d12.6618474!2d41.7642302!1m5!1m1!1s0x132570c79c4e24a9:0x51b0a047b91aa2d4!2m2!1d12.9179256!2d41.64438!1m5!1m1!1s0x132571f1c1fb588b:0xf8f845c7b462650c!2m2!1d12.9725661!2d41.5853316!1m5!1m1!1s0x132572773b7e231d:0x768c4b5fc02b6f5c!2m2!1d12.9854271!2d41.5491126!3e0?entry=ttu&g_ep=EgoyMDI1MTIwOS4wIKXMDSoKLDEwMDc5MjA3M0gBUAM%3D" target="_blank" class="bg-amber-500 text-black px-10 py-4 rounded-full font-bold uppercase tracking-tighter hover:bg-amber-600 transition">Percorso</a>
+                <a href="https://www.giardinodininfa.eu/products/domenica-25-gennaio-2026-castello-caetani" target="_blank" class="border border-white/20 text-white px-10 py-4 rounded-full font-bold uppercase tracking-tighter hover:bg-white hover:text-black transition">Ticket Castello</a>
+            </div>
+        </div>
+        <div class="custom-shape-divider-bottom">
+            <svg viewBox="0 0 1200 120" preserveAspectRatio="none"><path d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5,73.84-4.36,147.54,16.88,218.2,52.03C693.35,114.06,835.8,126,956,92c103.73-29.35,176.66-83.33,244-106.67V0Z"></path></svg>
+        </div>
+    </section>
+
+    <!-- Programma Ufficiale -->
+    <section id="programma" class="py-24 bg-black relative">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-20" data-aos="fade-up">
+                <h3 class="text-amber-500 font-bold uppercase tracking-[0.4em] mb-2">Roadmap</h3>
+                <h2 class="text-5xl md:text-7xl font-black text-white italic uppercase tracking-tighter">Programma Ufficiale</h2>
+            </div>
+
+            <div class="timeline-container max-w-5xl mx-auto">
+                <div class="timeline-line"></div>
+
+                <!-- Punto 1 -->
+                <div class="timeline-item flex flex-col md:flex-row" data-aos="fade-right">
+                    <div class="timeline-dot"></div>
+                    <div class="md:w-1/2 md:pr-12 md:text-right mb-4 md:mb-0">
+                        <span class="text-amber-500 font-bold text-2xl italic">08:30</span>
+                    </div>
+                    <div class="md:w-1/2 md:pl-12">
+                        <div class="moto-card p-6 rounded-2xl">
+                            <h4 class="text-white font-bold text-lg mb-1"><i class="fas fa-flag-checkered mr-2 text-amber-500"></i>Appuntamento</h4>
+                            <p class="text-gray-300">Presso autogrill Casilina interna.</p>
+                            <a href="https://maps.app.goo.gl/yYv3E2p9v2P9S6Pz7" target="_blank" class="map-btn">
+                                <i class="fas fa-location-arrow mr-2"></i> Vai all'Autogrill
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Punto 2 -->
+                <div class="timeline-item flex flex-col md:flex-row" data-aos="fade-left">
+                    <div class="timeline-dot"></div>
+                    <div class="md:w-1/2 md:pr-12 md:text-right mb-4 md:mb-0 order-2 md:order-1">
+                        <div class="moto-card p-6 rounded-2xl">
+                            <h4 class="text-white font-bold text-lg mb-1"><i class="fas fa-gas-pump mr-2 text-amber-500"></i>Partenza</h4>
+                            <p class="text-gray-300">Partenza con pieno di carburante e colazionati.</p>
+                        </div>
+                    </div>
+                    <div class="md:w-1/2 md:pl-12 order-1 md:order-2">
+                        <span class="text-amber-500 font-bold text-2xl italic">09:00</span>
+                    </div>
+                </div>
+
+                <!-- Punto 3 -->
+                <div class="timeline-item flex flex-col md:flex-row" data-aos="fade-right">
+                    <div class="timeline-dot"></div>
+                    <div class="md:w-1/2 md:pr-12 md:text-right mb-4 md:mb-0">
+                        <span class="text-amber-500 font-bold text-2xl italic">Sosta</span>
+                    </div>
+                    <div class="md:w-1/2 md:pl-12">
+                        <div class="moto-card p-6 rounded-2xl">
+                            <h4 class="text-white font-bold text-lg mb-1"><i class="fas fa-coffee mr-2 text-amber-500"></i>Pausa Caffè</h4>
+                            <p class="text-gray-300">Come da percorso, sosta al Bar Garibaldi a Velletri.</p>
+                            <a href="https://maps.app.goo.gl/S7Yg9S2L1x9B9u4m8" target="_blank" class="map-btn">
+                                <i class="fas fa-location-arrow mr-2"></i> Vai al Bar Garibaldi
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Punto 4 -->
+                <div class="timeline-item flex flex-col md:flex-row" data-aos="fade-left">
+                    <div class="timeline-dot"></div>
+                    <div class="md:w-1/2 md:pr-12 md:text-right mb-4 md:mb-0 order-2 md:order-1">
+                        <div class="moto-card p-6 rounded-2xl">
+                            <h4 class="text-white font-bold text-lg mb-1"><i class="fas fa-walking mr-2 text-amber-500"></i>Sermoneta</h4>
+                            <p class="text-gray-300">Arrivati a Sermoneta, passeggiata libera nel centro storico.</p>
+                        </div>
+                    </div>
+                    <div class="md:w-1/2 md:pl-12 order-1 md:order-2">
+                        <span class="text-amber-500 font-bold text-2xl italic">Arrivo</span>
+                    </div>
+                </div>
+
+                <!-- Punto 5 -->
+                <div class="timeline-item flex flex-col md:flex-row" data-aos="fade-right">
+                    <div class="timeline-dot"></div>
+                    <div class="md:w-1/2 md:pr-12 md:text-right mb-4 md:mb-0">
+                        <span class="text-amber-500 font-bold text-2xl italic">12:00</span>
+                    </div>
+                    <div class="md:w-1/2 md:pl-12">
+                        <div class="moto-card p-6 rounded-2xl">
+                            <h4 class="text-white font-bold text-lg mb-1"><i class="fas fa-fort-awesome mr-2 text-amber-500"></i>Visita al Castello</h4>
+                            <p class="text-gray-300">Visita guidata all'interno del suggestivo Castello Caetani.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Punto 6 -->
+                <div class="timeline-item flex flex-col md:flex-row" data-aos="fade-left">
+                    <div class="timeline-dot"></div>
+                    <div class="md:w-1/2 md:pr-12 md:text-right mb-4 md:mb-0 order-2 md:order-1">
+                        <div class="moto-card p-6 rounded-2xl">
+                            <h4 class="text-white font-bold text-lg mb-1"><i class="fas fa-utensils mr-2 text-amber-500"></i>Pranzo Libero</h4>
+                            <p class="text-gray-300">Pranzo presso gli stand della sagra della polenta (frazione Doganella).</p>
+                        </div>
+                    </div>
+                    <div class="md:w-1/2 md:pl-12 order-1 md:order-2">
+                        <span class="text-amber-500 font-bold text-2xl italic">Pranzo</span>
+                    </div>
+                </div>
+
+                <!-- Punto 7 -->
+                <div class="timeline-item flex flex-col md:flex-row" data-aos="fade-right">
+                    <div class="timeline-dot"></div>
+                    <div class="md:w-1/2 md:pr-12 md:text-right mb-4 md:mb-0">
+                        <span class="text-amber-500 font-bold text-2xl italic">Sosta Tecnica</span>
+                    </div>
+                    <div class="md:w-1/2 md:pl-12">
+                        <div class="moto-card p-6 rounded-2xl">
+                            <h4 class="text-white font-bold text-lg mb-1"><i class="fas fa-gas-pump mr-2 text-amber-500"></i>Rifornimento</h4>
+                            <p class="text-gray-300">Rifornimento a Colleferro, ENI accanto al bar Marini.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Punto 8 -->
+                <div class="timeline-item flex flex-col md:flex-row" data-aos="fade-left">
+                    <div class="timeline-dot"></div>
+                    <div class="md:w-1/2 md:pr-12 md:text-right mb-4 md:mb-0 order-2 md:order-1">
+                        <div class="moto-card p-6 rounded-2xl">
+                            <h4 class="text-white font-bold text-lg mb-1"><i class="fas fa-road mr-2 text-amber-500"></i>Rientro</h4>
+                            <p class="text-gray-300">Possibilità di rientrare utilizzando l'autostrada A1 da Colleferro o Valmontone.</p>
+                        </div>
+                    </div>
+                    <div class="md:w-1/2 md:pl-12 order-1 md:order-2">
+                        <span class="text-amber-500 font-bold text-2xl italic">Rientro</span>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Storia & Leggenda -->
+    <section id="storia" class="py-24 bg-white/5 overflow-hidden">
+        <div class="container mx-auto px-6">
+            
+            <div class="text-center mb-20" data-aos="fade-up">
+                <h3 class="text-amber-500 font-bold uppercase tracking-[0.4em] mb-2">Approfondimenti</h3>
+                <h2 class="text-5xl md:text-7xl font-black text-white italic uppercase tracking-tighter">Storia & Leggenda</h2>
+            </div>
+
+            <!-- SERMONETA -->
+            <div class="mb-32">
+                <div class="flex flex-col lg:flex-row gap-12 items-center mb-12">
+                    <div class="lg:w-1/2 space-y-6" data-aos="fade-right">
+                        <h3 class="text-4xl font-black text-white uppercase italic tracking-tighter border-l-4 border-amber-500 pl-4">Sermoneta</h3>
+                        <p class="text-gray-300 text-lg leading-relaxed">
+                            Un borgo che sembra scolpito nella roccia. Sermoneta non è solo un punto d'arrivo, ma un viaggio nel tempo tra vicoli stretti e architetture difensive perfettamente conservate che dominano l'agro pontino.
+                        </p>
+                        
+                        <div class="space-y-4 pt-4">
+                            <div class="accordion-item border border-white/10 rounded-xl overflow-hidden">
+                                <div class="accordion-header p-5 flex justify-between items-center bg-white/5 cursor-pointer" onclick="toggleAccordion(this)">
+                                    <span class="font-bold text-amber-500 uppercase text-sm tracking-widest italic">1. Urbanistica Militare</span>
+                                    <i class="fas fa-chevron-down chevron-icon text-amber-500"></i>
+                                </div>
+                                <div class="accordion-content">
+                                    <p class="text-gray-400 mb-3">Sermoneta vanta una struttura urbana "a chiocciola" unica, concepita interamente per scopi difensivi. I vicoli non sono casuali: ogni angolo cieco e ogni restringimento era studiato per permettere ai difensori di colpire gli invasori dai balconi o dalle feritoie.</p>
+                                    <p class="text-gray-400">Le strade, pavimentate nel tipico calcare locale lucido e scivoloso, rendevano difficile l'avanzata della cavalleria nemica, garantendo un vantaggio strategico decisivo agli abitanti del borgo.</p>
+                                </div>
+                            </div>
+                            <div class="accordion-item border border-white/10 rounded-xl overflow-hidden">
+                                <div class="accordion-header p-5 flex justify-between items-center bg-white/5 cursor-pointer" onclick="toggleAccordion(this)">
+                                    <span class="font-bold text-amber-500 uppercase text-sm tracking-widest italic">2. La Loggia dei Mercanti</span>
+                                    <i class="fas fa-chevron-down chevron-icon text-amber-500"></i>
+                                </div>
+                                <div class="accordion-content text-gray-400">
+                                    <p class="mb-3">Costruita nel 1446 per volere di Onorato Caetani, la Loggia rappresenta il cuore commerciale e politico della Sermoneta rinascimentale. Caratterizzata da ampie arcate a tutto sesto, ospitava scambi commerciali, assemblee pubbliche e amministrava la giustizia locale.</p>
+                                    <p>Ancora oggi, la sua imponente struttura in pietra testimonia l'importanza economica che il borgo ricopriva come tappa obbligatoria lungo le rotte che collegavano il sud Italia allo Stato Pontificio.</p>
+                                </div>
+                            </div>
+                            <div class="accordion-item border border-white/10 rounded-xl overflow-hidden">
+                                <div class="accordion-header p-5 flex justify-between items-center bg-white/5 cursor-pointer" onclick="toggleAccordion(this)">
+                                    <span class="font-bold text-amber-500 uppercase text-sm tracking-widest italic">3. Simbolismo e Fede</span>
+                                    <i class="fas fa-chevron-down chevron-icon text-amber-500"></i>
+                                </div>
+                                <div class="accordion-content text-gray-400">
+                                    <p class="mb-3">Il patrimonio spirituale di Sermoneta è custodito nella Cattedrale di Santa Maria Assunta, eretta sulle rovine di un antico tempio pagano dedicato a Cibele. Il campanile romanico, alto 24 metri, è un capolavoro di maestria artigiana locale.</p>
+                                    <p>All'interno sono custoditi affreschi preziosi e opere che rivelano il legame indissolubile tra la famiglia Caetani e il clero, una relazione che ha modellato non solo la religione ma l'intera cultura del territorio.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="lg:w-1/2" data-aos="fade-left">
+                        <div class="rounded-2xl overflow-hidden border-2 border-white/10 shadow-2xl">
+                            <img src="borgo-sermoneta.jpg" class="w-full h-[400px] object-cover" alt="Sermoneta">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="marquee-container" data-aos="fade-up">
+                    <div class="marquee-content">
+                        <div class="gallery-item"><img src="borgo-sermoneta-01.jpg" alt="Scorcio Sermoneta"></div>
+                        <div class="gallery-item"><img src="borgo-sermoneta-02.jpg" alt="Scorcio Sermoneta"></div>
+                        <div class="gallery-item"><img src="borgo-sermoneta-03.jpg" alt="Scorcio Sermoneta"></div>
+                        <div class="gallery-item"><img src="borgo-sermoneta-04.jpg" alt="Scorcio Sermoneta"></div>
+                        <div class="gallery-item"><img src="borgo-sermoneta-05.jpg" alt="Scorcio Sermoneta"></div>
+                        <div class="gallery-item"><img src="borgo-sermoneta-06.jpg" alt="Scorcio Sermoneta"></div>
+
+
+					</div>
+                </div>
+            </div>
+
+            <!-- IL CASTELLO -->
+            <div>
+                <div class="flex flex-col lg:flex-row gap-12 items-center mb-12">
+                    <div class="lg:w-1/2 lg:order-2 space-y-6" data-aos="fade-left">
+                        <h3 class="text-4xl font-black text-white uppercase italic tracking-tighter border-l-4 border-amber-500 pl-4">Castello Caetani</h3>
+                        <p class="text-gray-300 text-lg leading-relaxed">
+                            Una delle fortezze più imponenti e meglio conservate d'Italia. Il castello non era solo una residenza nobiliare, ma una macchina da guerra inespugnabile evolutasi attraverso i secoli.
+                        </p>
+                        
+                        <div class="space-y-4 pt-4">
+                            <div class="accordion-item border border-white/10 rounded-xl overflow-hidden">
+                                <div class="accordion-header p-5 flex justify-between items-center bg-white/5 cursor-pointer" onclick="toggleAccordion(this)">
+                                    <span class="font-bold text-amber-500 uppercase text-sm tracking-widest italic">1. L'Ingegneria dei Borgia</span>
+                                    <i class="fas fa-chevron-down chevron-icon text-amber-500"></i>
+                                </div>
+                                <div class="accordion-content">
+                                    <p class="text-gray-400 mb-3">Quando Papa Alessandro VI Borgia confiscò il castello nel 1499, trasformò la residenza in una vera cittadella militare. Fu lui a commissionare le massicce cinte murarie esterne e i bastioni pronti per l'uso delle armi da fuoco.</p>
+                                    <p class="text-gray-400">Questi interventi strutturali resero la fortezza una delle più avanzate per l'epoca, capace di resistere non solo agli assedi prolungati ma anche alla nascente tecnologia dei cannoni pesanti.</p>
+                                </div>
+                            </div>
+                            <div class="accordion-item border border-white/10 rounded-xl overflow-hidden">
+                                <div class="accordion-header p-5 flex justify-between items-center bg-white/5 cursor-pointer" onclick="toggleAccordion(this)">
+                                    <span class="font-bold text-amber-500 uppercase text-sm tracking-widest italic">2. Le Stanze Pinte</span>
+                                    <i class="fas fa-chevron-down chevron-icon text-amber-500"></i>
+                                </div>
+                                <div class="accordion-content text-gray-400">
+                                    <p class="mb-3">Contrastando con l'esterno austero, l'interno rivela il lusso rinascimentale dei Caetani. Le cosiddette "Stanze Pinte" sono celebri per i cicli di affreschi del XV secolo attribuiti a discepoli del Pinturicchio.</p>
+                                    <p>Queste sale non erano solo abitative, ma rappresentavano un potente strumento di propaganda politica, con scene mitologiche e allegoriche destinate a impressionare gli ambasciatori e i nobili in visita.</p>
+                                </div>
+                            </div>
+                            <div class="accordion-item border border-white/10 rounded-xl overflow-hidden">
+                                <div class="accordion-header p-5 flex justify-between items-center bg-white/5 cursor-pointer" onclick="toggleAccordion(this)">
+                                    <span class="font-bold text-amber-500 uppercase text-sm tracking-widest italic">3. Il Maschio e la Difesa Finale</span>
+                                    <i class="fas fa-chevron-down chevron-icon text-amber-500"></i>
+                                </div>
+                                <div class="accordion-content text-gray-400">
+                                    <p class="mb-3">Il Maschio è la torre principale e il punto più alto del castello. Rappresentava l'ultimo rifugio in caso di caduta delle mura esterne. Con pareti spesse oltre 3 metri, era completamente autonomo, dotato di cisterne d'acqua e depositi alimentari.</p>
+                                    <p>La vista dal camminamento di ronda permette di comprendere la posizione dominante del castello, che poteva controllare l'intera pianura pontina fino al mare, rendendo impossibile qualsiasi avvicinamento nemico non rilevato.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="lg:w-1/2 lg:order-1" data-aos="fade-right">
+                        <div class="rounded-2xl overflow-hidden border-2 border-white/10 shadow-2xl">
+                            <img src="castello-caetani.jpg" class="w-full h-[400px] object-cover" alt="Castello">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Gallery Castello Caetani -->
+                <div class="marquee-container" data-aos="fade-up">
+                    <div class="marquee-content">
+                        <div class="gallery-item"><img src="castello-caetani-01.jpg" alt="Scorcio Sermoneta"></div>
+						<div class="gallery-item"><img src="castello-caetani-02.jpg" alt="Scorcio Sermoneta"></div>
+						<div class="gallery-item"><img src="castello-caetani-03.jpg" alt="Scorcio Sermoneta"></div>
+						<div class="gallery-item"><img src="castello-caetani-04.jpg" alt="Scorcio Sermoneta"></div>
+						<div class="gallery-item"><img src="castello-caetani-05.jpg" alt="Scorcio Sermoneta"></div>
+						<div class="gallery-item"><img src="castello-caetani-06.jpg" alt="Scorcio Sermoneta"></div>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Percorso -->
+    <section id="percorso" class="py-24 container mx-auto px-6">
+        <div class="text-center mb-12">
+            <h2 class="text-4xl font-black text-white italic uppercase tracking-tighter">La Mappa del Percorso</h2>
+        </div>
+        <div class="rounded-3xl overflow-hidden border border-white/10 shadow-2xl h-[500px]" data-aos="zoom-in">
+            <iframe 
+                src="https://www.google.com/maps/embed?pb=!1m28!1m12!1m3!1d47711.2366685417!2d12.8689242!3d41.6681266!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!4m13!3e0!4m5!1s0x132f62c7632ddf41%3A0x3c47b62f36a66bd3!2sArea+Servizio+Casilina+interna!3m2!1d41.8761306!2d12.6072486!4m5!1s0x132572773b7e231d%3A0x768c4b5fc02b6f5c!2sSermoneta+LT!3m2!1d41.5491126!2d12.9854271!5e0!3m2!1sit!2sit!4v1705663200000!5m2!1sit!2sit" 
+                width="100%" height="100%" style="border:0; filter: invert(90%) hue-rotate(180deg) brightness(95%);" allowfullscreen="" loading="lazy">
+            </iframe>
+        </div>
+        <div class="mt-8 text-center">
+             <a href="https://www.google.com/maps/dir/Area+Servizio+Casilina+interna,+00169+Roma+RM/41.7977155,12.5865768/V.+dei+Laghi,+14,+00047+Marino+RM/Cori,+04010+LT/Norma,+04010+LT/Sermoneta,+04013+LT/@41.6681266,12.8689242,14z/data=!4m33!4m32!1m5!1m1!1s0x132f62c7632ddf41:0x3c47b62f36a66bd3!2m2!1d12.6072486!2d41.8761306!1m0!1m5!1m1!1s0x132585d3d8a3abb3:0x2a6f5cb9cd2d1096!2m2!1d12.6618474!2d41.7642302!1m5!1m1!1s0x132570c79c4e24a9:0x51b0a047b91aa2d4!2m2!1d12.9179256!2d41.64438!1m5!1m1!1s0x132571f1c1fb588b:0xf8f845c7b462650c!2m2!1d12.9725661!2d41.5853316!1m5!1m1!1s0x132572773b7e231d:0x768c4b5fc02b6f5c!2m2!1d12.9854271!2d41.5491126!3e0?entry=ttu&g_ep=EgoyMDI1MTIwOS4wIKXMDSoKLDEwMDc5MjA3M0gBUAM%3D" target="_blank" class="text-amber-500 font-bold underline hover:text-white transition">Apri percorso completo su Google Maps</a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-12 bg-black border-t border-white/5 text-center">
+		 <center><img src="logo.png" alt="Logo" class="h-11 w-auto" onerror="this.src='https://placehold.co/100x100/f59e0b/black?text=FB'" style="    height: 135px;"></center>
+        <div class="container mx-auto px-6">
+            <p class="text-amber-500 font-black uppercase italic text-2xl mb-4">Free Bikers Roma</p>
+            <p class="text-gray-500 text-xs tracking-[0.4em]">© 2026 • Corri Libero • Roma Chapter</p>
+        </div>
+    </footer>
+
+    <script>
+        AOS.init({ duration: 800, once: true });
+
+        function toggleAccordion(element) {
+            const item = element.parentElement;
+            const isActive = item.classList.contains('active');
+            
+            // Close all others
+            document.querySelectorAll('.accordion-item').forEach(i => i.classList.remove('active'));
+
+            if (!isActive) {
+                item.classList.add('active');
+            }
+        }
+    </script>
+</body>
+</html>
