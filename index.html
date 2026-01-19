@@ -81,7 +81,7 @@
         .timeline-dot {
             position: absolute;
             left: 11px;
-            top: 10px;
+            top: 12px;
             width: 20px;
             height: 20px;
             background: var(--primary);
@@ -90,7 +90,7 @@
             box-shadow: 0 0 15px var(--primary);
         }
         @media (min-width: 768px) {
-            .timeline-dot { left: 50%; transform: translateX(-50%); }
+            .timeline-dot { left: 50%; transform: translateX(-50%); top: 10px; }
         }
 
         .moto-card {
@@ -180,8 +180,7 @@
             color: var(--primary);
             padding: 6px 12px;
             border-radius: 8px;
-            font-size: 0.75rem;
-            font-weight: bold;
+            font-size: 0.75rem;            font-weight: bold;
             margin-top: 10px;
             border: 1px solid var(--primary);
             transition: all 0.2s;
@@ -193,6 +192,8 @@
     </style>
 </head>
 <body>
+
+
 
     <!-- Header -->
     <header class="fixed w-full z-50 bg-black/80 backdrop-blur-md border-b border-white/5">
@@ -248,10 +249,10 @@
                 <!-- Punto 1 -->
                 <div class="timeline-item flex flex-col md:flex-row" data-aos="fade-right">
                     <div class="timeline-dot"></div>
-                    <div class="md:w-1/2 md:pr-12 md:text-right mb-4 md:mb-0">
+                    <div class="pl-12 md:pl-0 md:w-1/2 md:pr-12 md:text-right mb-4 md:mb-0">
                         <span class="text-amber-500 font-bold text-2xl italic">08:30</span>
                     </div>
-                    <div class="md:w-1/2 md:pl-12">
+                    <div class="pl-12 md:pl-12 md:w-1/2">
                         <div class="moto-card p-6 rounded-2xl">
                             <h4 class="text-white font-bold text-lg mb-1"><i class="fas fa-flag-checkered mr-2 text-amber-500"></i>Appuntamento</h4>
                             <p class="text-gray-300">Presso autogrill Casilina interna.</p>
@@ -265,13 +266,13 @@
                 <!-- Punto 2 -->
                 <div class="timeline-item flex flex-col md:flex-row" data-aos="fade-left">
                     <div class="timeline-dot"></div>
-                    <div class="md:w-1/2 md:pr-12 md:text-right mb-4 md:mb-0 order-2 md:order-1">
+                    <div class="pl-12 md:pl-0 md:w-1/2 md:pr-12 md:text-right mb-4 md:mb-0 order-2 md:order-1">
                         <div class="moto-card p-6 rounded-2xl">
                             <h4 class="text-white font-bold text-lg mb-1"><i class="fas fa-gas-pump mr-2 text-amber-500"></i>Partenza</h4>
                             <p class="text-gray-300">Partenza con pieno di carburante e colazionati.</p>
                         </div>
                     </div>
-                    <div class="md:w-1/2 md:pl-12 order-1 md:order-2">
+                    <div class="pl-12 md:pl-12 md:w-1/2 order-1 md:order-2">
                         <span class="text-amber-500 font-bold text-2xl italic">09:00</span>
                     </div>
                 </div>
@@ -279,10 +280,10 @@
                 <!-- Punto 3 -->
                 <div class="timeline-item flex flex-col md:flex-row" data-aos="fade-right">
                     <div class="timeline-dot"></div>
-                    <div class="md:w-1/2 md:pr-12 md:text-right mb-4 md:mb-0">
+                    <div class="pl-12 md:pl-0 md:w-1/2 md:pr-12 md:text-right mb-4 md:mb-0">
                         <span class="text-amber-500 font-bold text-2xl italic">Sosta</span>
                     </div>
-                    <div class="md:w-1/2 md:pl-12">
+                    <div class="pl-12 md:pl-12 md:w-1/2">
                         <div class="moto-card p-6 rounded-2xl">
                             <h4 class="text-white font-bold text-lg mb-1"><i class="fas fa-coffee mr-2 text-amber-500"></i>Pausa Caffè</h4>
                             <p class="text-gray-300">Come da percorso, sosta al Bar Garibaldi a Velletri.</p>
@@ -296,13 +297,13 @@
                 <!-- Punto 4 -->
                 <div class="timeline-item flex flex-col md:flex-row" data-aos="fade-left">
                     <div class="timeline-dot"></div>
-                    <div class="md:w-1/2 md:pr-12 md:text-right mb-4 md:mb-0 order-2 md:order-1">
+                    <div class="pl-12 md:pl-0 md:w-1/2 md:pr-12 md:text-right mb-4 md:mb-0 order-2 md:order-1">
                         <div class="moto-card p-6 rounded-2xl">
                             <h4 class="text-white font-bold text-lg mb-1"><i class="fas fa-walking mr-2 text-amber-500"></i>Sermoneta</h4>
                             <p class="text-gray-300">Arrivati a Sermoneta, passeggiata libera nel centro storico.</p>
                         </div>
                     </div>
-                    <div class="md:w-1/2 md:pl-12 order-1 md:order-2">
+                    <div class="pl-12 md:pl-12 md:w-1/2 order-1 md:order-2">
                         <span class="text-amber-500 font-bold text-2xl italic">Arrivo</span>
                     </div>
                 </div>
@@ -310,10 +311,10 @@
                 <!-- Punto 5 -->
                 <div class="timeline-item flex flex-col md:flex-row" data-aos="fade-right">
                     <div class="timeline-dot"></div>
-                    <div class="md:w-1/2 md:pr-12 md:text-right mb-4 md:mb-0">
+                    <div class="pl-12 md:pl-0 md:w-1/2 md:pr-12 md:text-right mb-4 md:mb-0">
                         <span class="text-amber-500 font-bold text-2xl italic">12:00</span>
                     </div>
-                    <div class="md:w-1/2 md:pl-12">
+                    <div class="pl-12 md:pl-12 md:w-1/2">
                         <div class="moto-card p-6 rounded-2xl">
                             <h4 class="text-white font-bold text-lg mb-1"><i class="fas fa-fort-awesome mr-2 text-amber-500"></i>Visita al Castello</h4>
                             <p class="text-gray-300">Visita guidata all'interno del suggestivo Castello Caetani.</p>
@@ -324,13 +325,13 @@
                 <!-- Punto 6 -->
                 <div class="timeline-item flex flex-col md:flex-row" data-aos="fade-left">
                     <div class="timeline-dot"></div>
-                    <div class="md:w-1/2 md:pr-12 md:text-right mb-4 md:mb-0 order-2 md:order-1">
+                    <div class="pl-12 md:pl-0 md:w-1/2 md:pr-12 md:text-right mb-4 md:mb-0 order-2 md:order-1">
                         <div class="moto-card p-6 rounded-2xl">
                             <h4 class="text-white font-bold text-lg mb-1"><i class="fas fa-utensils mr-2 text-amber-500"></i>Pranzo Libero</h4>
                             <p class="text-gray-300">Pranzo presso gli stand della sagra della polenta (frazione Doganella).</p>
                         </div>
                     </div>
-                    <div class="md:w-1/2 md:pl-12 order-1 md:order-2">
+                    <div class="pl-12 md:pl-12 md:w-1/2 order-1 md:order-2">
                         <span class="text-amber-500 font-bold text-2xl italic">Pranzo</span>
                     </div>
                 </div>
@@ -338,10 +339,10 @@
                 <!-- Punto 7 -->
                 <div class="timeline-item flex flex-col md:flex-row" data-aos="fade-right">
                     <div class="timeline-dot"></div>
-                    <div class="md:w-1/2 md:pr-12 md:text-right mb-4 md:mb-0">
+                    <div class="pl-12 md:pl-0 md:w-1/2 md:pr-12 md:text-right mb-4 md:mb-0">
                         <span class="text-amber-500 font-bold text-2xl italic">Sosta Tecnica</span>
                     </div>
-                    <div class="md:w-1/2 md:pl-12">
+                    <div class="pl-12 md:pl-12 md:w-1/2">
                         <div class="moto-card p-6 rounded-2xl">
                             <h4 class="text-white font-bold text-lg mb-1"><i class="fas fa-gas-pump mr-2 text-amber-500"></i>Rifornimento</h4>
                             <p class="text-gray-300">Rifornimento a Colleferro, ENI accanto al bar Marini.</p>
@@ -352,13 +353,13 @@
                 <!-- Punto 8 -->
                 <div class="timeline-item flex flex-col md:flex-row" data-aos="fade-left">
                     <div class="timeline-dot"></div>
-                    <div class="md:w-1/2 md:pr-12 md:text-right mb-4 md:mb-0 order-2 md:order-1">
+                    <div class="pl-12 md:pl-0 md:w-1/2 md:pr-12 md:text-right mb-4 md:mb-0 order-2 md:order-1">
                         <div class="moto-card p-6 rounded-2xl">
                             <h4 class="text-white font-bold text-lg mb-1"><i class="fas fa-road mr-2 text-amber-500"></i>Rientro</h4>
                             <p class="text-gray-300">Possibilità di rientrare utilizzando l'autostrada A1 da Colleferro o Valmontone.</p>
                         </div>
                     </div>
-                    <div class="md:w-1/2 md:pl-12 order-1 md:order-2">
+                    <div class="pl-12 md:pl-12 md:w-1/2 order-1 md:order-2">
                         <span class="text-amber-500 font-bold text-2xl italic">Rientro</span>
                     </div>
                 </div>
