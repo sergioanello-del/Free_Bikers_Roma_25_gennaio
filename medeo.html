@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Free Bikers Roma - Gita a Sermoneta</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #f59e0b;
+            --dark: #0a0a0a;
+        }
+
+        body {
+            background-color: var(--dark);
+            color: #e5e7eb;
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #0a0a0a; }
+        ::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 10px; }
+
+        /* --- WEATHER WIDGET RESPONSIVE STYLE --- */
+        .weather-mini-card {
+            width: 100%;
+            max-width: 500px;
+            margin: 0 auto;
+            background: linear-gradient(180deg, rgba(20, 20, 20, 0.95) 0%, rgba(5, 5, 5, 1) 100%);
+            border: 2px solid var(--primary);
+            box-shadow: 0 0 20px rgba(245, 158, 11, 0.2), inset 0 0 15px rgba(245, 158, 11, 0.1);
+            position: relative;
+            overflow: hidden;
+            border-radius: 1rem;
+        }
+
+        .weather-mini-card::after {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: repeating-linear-gradient(0deg, rgba(245, 158, 11, 0.03) 0px, rgba(245, 158, 11, 0.03) 1px, transparent 1px, transparent 2px);
+            pointer-events: none;
+        }
+
+        .scanline {
+            width: 100%;
+            height: 2px;
+            background: rgba(245, 158, 11, 0.3);
+            position: absolute;
+            top: 0;
+            z-index: 5;
+            animation: scan 4s linear infinite;
+        }
+
+        @keyframes scan {
+            0% { top: 0; }
+            100% { top: 100%; }
+        }
+
+        /* --- ICON ANIMATIONS --- */
+        .ani-float { animation: float 3s ease-in-out infinite; }
+        .ani-spin-slow { animation: spin-slow 12s linear infinite; }
+        .ani-pulse-fast { animation: pulse-custom 1.5s ease-in-out infinite; }
+        .ani-shake { animation: shake 4s ease-in-out infinite; }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+        @keyframes spin-slow {
+            to { transform: rotate(360deg); }
+        }
+        @keyframes pulse-custom {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.6; transform: scale(1.05); }
+        }
+        @keyframes shake {
+            0%, 100% { transform: rotate(0deg); }
+            10%, 30% { transform: rotate(8deg); }
+            20%, 40% { transform: rotate(-8deg); }
+        }
+
+        .loader-ring {
+            width: 30px;
+            height: 30px;
+            border: 3px solid rgba(245, 158, 11, 0.1);
+            border-left-color: var(--primary);
+            border-radius: 50%;
+            animation: spin-slow 0.8s linear infinite;
+        }
+
+        /* --- GALLERY --- */
+        .gallery-container {
+            cursor: grab;
+            overflow-x: auto;
+            scrollbar-width: none;
+            -webkit-overflow-scrolling: touch;
+        }
+        .gallery-container::-webkit-scrollbar { display: none; }
+        .gallery-item { min-width: 260px; transition: transform 0.4s ease; }
+
+        #lightbox {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.95);
+            z-index: 100;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        #lightbox.active { display: flex; }
+    </style>
+</head>
+<body>
+
+    <!-- Header Hero -->
+    <header class="relative h-[80vh] md:h-screen flex items-center justify-center overflow-hidden">
+        <div class="absolute inset-0 z-0">
+            <img src="https://images.unsplash.com/photo-1558981403-c5f91cbba527?auto=format&fit=crop&q=80&w=2000" alt="Biker background" class="w-full h-full object-cover opacity-40">
+            <div class="absolute inset-0 bg-gradient-to-b from-transparent via-dark/50 to-dark"></div>
+        </div>
+        
+        <div class="relative z-10 text-center px-4" data-aos="zoom-out">
+            <h1 class="text-5xl md:text-8xl font-black text-white mb-2 tracking-tighter italic">
+                RIDE <span class="text-amber-500">HARD</span>
+            </h1>
+            <p class="text-amber-500 font-bold tracking-[0.2em] md:tracking-[0.3em] text-xs md:text-sm uppercase mb-8">Sermoneta - 25 Gennaio</p>
+            <div class="flex justify-center gap-4">
+                <a href="#weather" class="px-6 py-3 bg-amber-500 text-black font-black text-sm rounded-sm hover:skew-x-[-10deg] transition-all">SISTEMA METEO</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Optimized Weather Section -->
+    <section id="weather" class="py-10 px-4 bg-dark">
+        <div class="max-w-xl mx-auto" data-aos="fade-up">
+            
+            <div class="weather-mini-card p-4 md:p-6">
+                <div class="scanline"></div>
+                
+                <!-- Status Header -->
+                <div class="flex justify-between items-center mb-4 border-b border-amber-500/20 pb-3">
+                    <div>
+                        <h2 class="text-xl md:text-2xl font-black italic tracking-tighter uppercase leading-none">Sermoneta OS</h2>
+                        <p class="text-[9px] md:text-[10px] text-amber-500 uppercase font-mono tracking-widest mt-1" id="last-update">Sincronizzazione...</p>
+                    </div>
+                    <div id="weather-status">
+                        <div class="loader-ring"></div>
+                    </div>
+                </div>
+
+                <!-- Main Grid - Responsive (1 col mobile, 2 col desktop) -->
+                <div id="gemini-report" class="grid grid-cols-1 sm:grid-cols-2 gap-3 opacity-0 transition-all duration-1000">
+                    <!-- Contenuto generato via JS -->
+                </div>
+
+                <!-- Advice Box -->
+                <div id="gemini-advice" class="mt-4 opacity-0 transition-all duration-1000 delay-300">
+                    <!-- Contenuto generato via JS -->
+                </div>
+            </div>
+
+            <p class="text-center text-[8px] md:text-[9px] text-gray-600 mt-4 uppercase tracking-[0.4em]">Biometric Data Feed: Active Analysis</p>
+        </div>
+    </section>
+
+    <!-- Gallery -->
+    <section id="gallery" class="py-12 md:py-20">
+        <div class="px-4 mb-8 text-center" data-aos="fade-up">
+            <h2 class="text-2xl md:text-3xl font-black italic uppercase">Squadron <span class="text-amber-500">Shots</span></h2>
+        </div>
+        
+        <div class="gallery-container flex gap-4 px-4 pb-12" id="gallery-slider">
+            <div class="gallery-list flex gap-4">
+                <div class="gallery-item bg-zinc-900 p-2 border border-white/5 cursor-pointer" onclick="openLightbox(this)">
+                    <img src="https://images.unsplash.com/photo-1517457373958-b7bdd4587205?auto=format&fit=crop&q=80&w=400" alt="Sermoneta" class="w-full h-40 md:h-48 object-cover grayscale hover:grayscale-0 transition-all">
+                    <p class="text-[9px] mt-2 text-gray-500 font-mono">IMG_001.RAW</p>
+                </div>
+                <div class="gallery-item bg-zinc-900 p-2 border border-white/5 cursor-pointer" onclick="openLightbox(this)">
+                    <img src="https://images.unsplash.com/photo-1471466054146-e71bcc0d2bb2?auto=format&fit=crop&q=80&w=400" alt="Bikers" class="w-full h-40 md:h-48 object-cover grayscale hover:grayscale-0 transition-all">
+                    <p class="text-[9px] mt-2 text-gray-500 font-mono">IMG_002.RAW</p>
+                </div>
+                <div class="gallery-item bg-zinc-900 p-2 border border-white/5 cursor-pointer" onclick="openLightbox(this)">
+                    <img src="https://images.unsplash.com/photo-1591637333184-19aa84b3e01f?auto=format&fit=crop&q=80&w=400" alt="Castle" class="w-full h-40 md:h-48 object-cover grayscale hover:grayscale-0 transition-all">
+                    <p class="text-[9px] mt-2 text-gray-500 font-mono">IMG_003.RAW</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Lightbox -->
+    <div id="lightbox" onclick="closeLightbox()">
+        <img id="lightbox-img" src="" alt="Full view" class="max-w-full max-h-full border-2 border-amber-500 object-contain">
+    </div>
+
+    <script>
+        AOS.init({ duration: 800, once: true });
+
+        const apiKey = ""; 
+
+        async function fetchGeminiWeather() {
+            const reportDiv = document.getElementById('gemini-report');
+            const adviceDiv = document.getElementById('gemini-advice');
+            const statusDiv = document.getElementById('weather-status');
+            const lastUpdate = document.getElementById('last-update');
+
+            const now = new Date();
+            const timeString = now.toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' });
+            const dateString = now.toLocaleDateString('it-IT');
+
+            const prompt = `Analisi meteo LIVE per Sermoneta (LT). 
+            Data: ${dateString}, ore ${timeString}.
+            Target: Previsioni per Domenica 25 Gennaio.
+            Stile: Cyberpunk/Biker "Free Bikers Roma".
+            Output JSON: {
+                "temp": "valore",
+                "sky": "condizione",
+                "wind": "forza",
+                "risk": "rischio ghiaccio/pioggia %",
+                "brief": "un consiglio di una riga (max 50 caratteri)",
+                "suit": "equipaggiamento consigliato"
+            }`;
+
+            try {
+                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        contents: [{ parts: [{ text: prompt }] }],
+                        generationConfig: { responseMimeType: "application/json" }
+                    })
+                });
+
+                const data = await response.json();
+                const res = JSON.parse(data.candidates[0].content.parts[0].text);
+
+                statusDiv.innerHTML = `<span class="text-green-500 text-[10px] font-mono animate-pulse">● ONLINE</span>`;
+                lastUpdate.innerText = `SYNC: ${timeString}`;
+
+                reportDiv.innerHTML = `
+                    <div class="bg-amber-500/5 p-3 border border-amber-500/10 flex items-center gap-3">
+                        <i class="fas fa-temperature-high text-amber-500 text-lg md:text-xl ani-pulse-fast"></i>
+                        <div>
+                            <p class="text-[8px] text-amber-500/60 uppercase">Temp</p>
+                            <p class="text-xl md:text-2xl font-black">${res.temp}</p>
+                        </div>
+                    </div>
+                    <div class="bg-amber-500/5 p-3 border border-amber-500/10 flex items-center gap-3">
+                        <i class="fas fa-cloud-sun text-amber-500 text-lg md:text-xl ani-float"></i>
+                        <div>
+                            <p class="text-[8px] text-amber-500/60 uppercase">Meteo</p>
+                            <p class="text-base md:text-lg font-black uppercase leading-tight">${res.sky}</p>
+                        </div>
+                    </div>
+                    <div class="bg-amber-500/5 p-3 border border-amber-500/10 flex items-center gap-3">
+                        <i class="fas fa-wind text-amber-500 text-lg md:text-xl ani-shake"></i>
+                        <div>
+                            <p class="text-[8px] text-amber-500/60 uppercase">Vento</p>
+                            <p class="text-lg md:text-xl font-black">${res.wind}</p>
+                        </div>
+                    </div>
+                    <div class="bg-amber-500/5 p-3 border border-amber-500/10 flex items-center gap-3">
+                        <i class="fas fa-skull-crossbones text-red-500 text-lg md:text-xl ani-pulse-fast"></i>
+                        <div>
+                            <p class="text-[8px] text-red-500/60 uppercase">Rischio</p>
+                            <p class="text-lg md:text-xl font-black text-red-500">${res.risk}</p>
+                        </div>
+                    </div>
+                `;
+
+                adviceDiv.innerHTML = `
+                    <div class="p-3 bg-amber-500 text-black font-mono text-[10px] md:text-[11px] leading-tight relative overflow-hidden group">
+                        <div class="absolute inset-0 bg-white/30 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700"></div>
+                        <div class="relative z-10">
+                            <p class="font-black mb-1 uppercase flex items-center gap-2">
+                                <i class="fas fa-brain ani-spin-slow"></i> AI ANALYSIS:
+                            </p>
+                            <p class="italic font-bold">"${res.brief}"</p>
+                            <p class="mt-2 pt-2 border-t border-black/20 font-black">
+                                <i class="fas fa-shield-halved"></i> GEAR: ${res.suit}
+                            </p>
+                        </div>
+                    </div>
+                `;
+
+                reportDiv.classList.remove('opacity-0');
+                adviceDiv.classList.remove('opacity-0');
+
+            } catch (err) {
+                statusDiv.innerHTML = `<span class="text-red-500 text-[10px]">ERR_SYNC</span>`;
+                setTimeout(fetchGeminiWeather, 5000);
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', fetchGeminiWeather);
+
+        // Simple Mobile-friendly Slider
+        const slider = document.getElementById('gallery-slider');
+        let isDown = false; let startX; let scrollLeft;
+        slider.addEventListener('mousedown', (e) => { isDown = true; startX = e.pageX - slider.offsetLeft; scrollLeft = slider.scrollLeft; });
+        slider.addEventListener('mouseleave', () => isDown = false);
+        slider.addEventListener('mouseup', () => isDown = false);
+        slider.addEventListener('mousemove', (e) => { if(!isDown) return; e.preventDefault(); const x = e.pageX - slider.offsetLeft; const walk = (x - startX) * 2; slider.scrollLeft = scrollLeft - walk; });
+
+        function openLightbox(el) {
+            document.getElementById('lightbox-img').src = el.querySelector('img').src;
+            document.getElementById('lightbox').classList.add('active');
+        }
+        function closeLightbox() { document.getElementById('lightbox').classList.remove('active'); }
+    </script>
+</body>
+</html>
